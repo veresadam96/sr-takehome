@@ -1,0 +1,24 @@
+import { eq } from "drizzle-orm";
+
+import { db } from "../index";
+import { subscriptionsTable } from "../schema";
+
+export async function selectSubscriptionsByUserId(userId: number) {
+  return db
+    .select()
+    .from(subscriptionsTable)
+    .where(eq(subscriptionsTable.userId, userId));
+}
+
+export async function insertSubscription(
+  subscription: typeof subscriptionsTable.$inferInsert,
+) {
+  // onConflictDoNothing relies on the unique (user_id, channel, address)
+  // constraint: a duplicate subscription returns no row.
+  const [created] = await db
+    .insert(subscriptionsTable)
+    .values(subscription)
+    .onConflictDoNothing()
+    .returning();
+  return created;
+}

@@ -14,6 +14,7 @@ import {
 import { useStoredUser } from "../hooks/useStoredUser";
 import { isAdmin } from "./actions";
 import PostForm from "./PostForm";
+import SubscribePanel from "./SubscribePanel";
 
 type Post = {
   id: number;
@@ -59,7 +60,7 @@ export default function PostList({ posts }: { posts: Post[] }) {
   const router = useRouter();
   const [user] = useStoredUser();
   const [mounted, setMounted] = useState(false);
-  const [admin, setAdmin] = useState(false);
+  const [role, setRole] = useState<"admin" | "user" | null>(null);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
@@ -72,7 +73,7 @@ export default function PostList({ posts }: { posts: Post[] }) {
     }
     let active = true;
     isAdmin(user).then((ok) => {
-      if (active) setAdmin(ok);
+      if (active) setRole(ok ? "admin" : "user");
     });
     return () => {
       active = false;
@@ -93,7 +94,7 @@ export default function PostList({ posts }: { posts: Post[] }) {
         </Stack>
       </Box>
 
-      {admin && user && (
+      {role && user && (
         <Box
           sx={{
             width: 360,
@@ -104,7 +105,11 @@ export default function PostList({ posts }: { posts: Post[] }) {
             borderColor: "divider",
           }}
         >
-          <PostForm user={user} />
+          {role === "admin" ? (
+            <PostForm user={user} />
+          ) : (
+            <SubscribePanel user={user} />
+          )}
         </Box>
       )}
     </Box>

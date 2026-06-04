@@ -3,10 +3,29 @@
 import { insertPost } from "@/src/db/repositories/posts";
 import {
   insertSubscription,
+  selectAllSubscriptions,
   selectSubscriptionsByUserId,
 } from "@/src/db/repositories/subscriptions";
 import { selectUserByUsername } from "@/src/db/repositories/users";
-import type { ChannelType } from "@/src/channels/channels";
+import { sendMessage, type ChannelType } from "@/src/channels/channels";
+
+async function notifySubscribers(title: string, description: string) {
+  const subscriptions = await selectAllSubscriptions();
+  const message = `${title}\n\n${description}`;
+
+  const results = await Promise.allSettled(
+    subscriptions.map((s) =>
+      sendMessage(s.channel as ChannelType, s.address, message),
+    ),
+  );
+
+  results.forEach((result, i) => {
+    if (result.status === "fulfilled") {
+      const { channel, address } = subscriptions[i];
+      console.log(`Sent ${channel} notification to ${address}`);
+    }
+  });
+}
 
 export async function isAdmin(username: string) {
   const user = await selectUserByUsername(username);
@@ -20,13 +39,14 @@ export async function createPost(
   title: string,
   description: string,
 ): Promise<CreatePostResult> {
-  // Authorization is enforced server-side, not just via the client redirect.
   const user = await selectUserByUsername(username);
   if (user?.role !== "admin") {
     return { ok: false, error: "Not authorized." };
   }
 
   await insertPost({ title, description });
+  await notifySubscribers(title, description);
+
   return { ok: true };
 }
 

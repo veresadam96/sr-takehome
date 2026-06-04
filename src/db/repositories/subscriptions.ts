@@ -3,6 +3,10 @@ import { eq } from "drizzle-orm";
 import { db } from "../index";
 import { subscriptionsTable } from "../schema";
 
+export async function selectAllSubscriptions() {
+  return db.select().from(subscriptionsTable);
+}
+
 export async function selectSubscriptionsByUserId(userId: number) {
   return db
     .select()

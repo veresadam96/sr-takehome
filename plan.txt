@@ -1,0 +1,78 @@
+My interpretation of the brief:
+-An existing web application needs a new feature where users can set up alerts to certain events (arbitrarily defined)
+-The base web application is interpreted to be a simple news site, where admins can add new posts and users can read them. A more complex interpretation could be a news aggregator site, where posts come from polled 3rd party sites.
+-I decided "events" can be any posts created on the site
+-Posts should be collectively subscribable by the user (disasters, world news etc.), on channel subscription, any new post gets sent to that channel
+-Attempting to subscribe should show several real-world options, but mainly: email and Slack
+-The subscription mechanism should be generic to be able to feature new channels later
+-Subscribing causes the channel to be registered as a subscribed channel
+-On new event posting, subscribed channels get the messages
+-admins can create posts on the post list. regular users can't do that.
+-admins should have a route to view all user channel subscriptions
+-logged in username is stored in SessionStorage (lives only in browser tab scope)
+-if no logged username is found in storage -> all routes route back to /login
+-Channels cannot be unsubscribed, brief did not mention it and it's cut due to time limits
+
+Domain:
+-users
+  id: number
+  username: text
+  password: text
+  role: text (user | admin)
+-posts
+  id: number
+  title: text
+  description: text
+-subscriptions
+  id: number
+  user_id: FK(users.id)
+  channel: text
+  address: text
+  CONSTRAINTS: UK(user_id, channel, address)
+
+Stack:
+-App: Next.js
+-DB: SQLite - Drizzle
+
+Steps (in order):
+1. Create base app (to expand with the required feature):
+  1. Create Next.js app
+  2. Install dependencies (Drizzle)
+  3. Set up SQLite db
+  4. Create domain entities and their tables
+  5. Preseed users with 3 rows
+    1. user-foo - password: foo; role: user
+    2. user-bar - password: bar; role: user
+    3. admin - password: admin; role: admin
+  6. Create ORM operations to create new posts
+  7. Create Next.js routes for users and admins
+    1. /
+      1. if no user -> routes to /login; else routes to /posts
+    2. /login
+      1. Login form
+      2. username + password inputs + submit button
+      3. routes to /posts on successful login
+      4. store logged in username in session storage
+    3. /posts
+      1. View all posts
+      2. if admin user
+        1. Set up a form with two inputs: title (textbox) and description (textarea).
+        2. Set up a submit button that saves the new post
+2. Create the feature
+  1. Create strategy pattern for channel message sending
+    1. Interface for generic channels: "send" function
+    2. Separate channel implementations: email, Slack etc.
+    3. Implementations collected into a map (type - implemented function)
+  2. Create separate channel message sending implementations
+  3. Add new route
+    1. /admin/subscriptions
+      1. View all users' subscriptions; route back to /login if user is not admin
+      2. List with columns: username; channel; address
+  4. Modify existing route
+    1. /admin/posts
+      1. On submit, send messages to all registered channels
+        1. Collect from DB
+        2. Map by channel type
+        3. Fire handler function
+    2. /posts
+      1. Set up a subscribe button that lists the available channels. Filter out channels already subscribed.

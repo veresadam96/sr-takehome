@@ -1,10 +1,22 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "../index";
-import { subscriptionsTable } from "../schema";
+import { subscriptionsTable, usersTable } from "../schema";
 
 export async function selectAllSubscriptions() {
   return db.select().from(subscriptionsTable);
+}
+
+export async function selectAllSubscriptionsWithUsername() {
+  return db
+    .select({
+      id: subscriptionsTable.id,
+      username: usersTable.username,
+      channel: subscriptionsTable.channel,
+      address: subscriptionsTable.address,
+    })
+    .from(subscriptionsTable)
+    .innerJoin(usersTable, eq(subscriptionsTable.userId, usersTable.id));
 }
 
 export async function selectSubscriptionsByUserId(userId: number) {

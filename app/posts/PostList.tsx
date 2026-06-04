@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -106,7 +107,15 @@ export default function PostList({ posts }: { posts: Post[] }) {
           }}
         >
           {role === "admin" ? (
-            <PostForm user={user} />
+            <Stack spacing={2}>
+              <Button
+                variant="outlined"
+                onClick={() => router.push("/admin/subscriptions")}
+              >
+                View subscriptions
+              </Button>
+              <PostForm user={user} />
+            </Stack>
           ) : (
             <SubscribePanel user={user} />
           )}

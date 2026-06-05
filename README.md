@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Assignment
 
-## Getting Started
+The following brief for a feature was to be interpreted, planned and implemented:
 
-First, run the development server:
+*"We want users to be able to set up alerts so they get notified when something important happens in the world — like breaking news, market movements, natural disasters, that kind of thing. Should work for both email and Slack. Make it flexible enough that we can add more channels later. We need an admin view too."*
 
-```bash
+Nothing else is given about the environment, application etc., these had to be arbitrarily set up by me. Plans were requested, they are available at `plan.txt`, this contains all of my initial plans and interpretations for this assignment.
+
+For this purpose, I built a Next.js application. The plans were mostly written by me and checked by AI. Some small additions were made to the plans, suggested by the AI. Coding was mostly done by the AI, with me fixing a few odd React hooks; removing code not in scope; refactoring redundant codes.
+
+AI prompts were requested. They are available as a `markdown` at `full-transcript.md`. The AI in use is Claude Code.
+
+Images of the end result are available under `screenshots`. Also featured at the bottom of this README.
+
+## Running
+
+```
+npm i
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Screenshots
+![Image 1](./screenshots/image1.png)
+![Image 2](./screenshots/image2.png)
+![Image 3](./screenshots/image3.png)
+![Image 4](./screenshots/image4.png)
+![Image 5](./screenshots/image5.png)
+![Image 6](./screenshots/image6.png)
+![Image 7](./screenshots/image7.png)
+![Image 8](./screenshots/image8.png)
+![Image 9](./screenshots/image9.png)
+![Image 10](./screenshots/image10.png)
